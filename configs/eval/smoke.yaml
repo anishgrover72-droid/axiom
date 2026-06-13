@@ -1,0 +1,6 @@
+# G0 sanity: one tiny variant, a handful of examples, no training required.
+datasets: [gsm8k]
+limit: 4
+variants:
+  - {name: base, policy: base, decode: greedy, adaptive: false}
+metrics: [accuracy, tokens_per_answer]

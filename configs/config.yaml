@@ -1,0 +1,23 @@
+# Top-level composed config. Override groups on the CLI, e.g.:
+#   python -m scripts.05_prm_train model=phi4_mini prm.train.epochs=2
+defaults:
+  - model: qwen2_5_1_5b      # fast-iteration student; swap to phi4_mini for the headline run
+  - data: gsm8k
+  - teacher: deepseek        # judge for the commonsense head + optional trace generation
+  - distill: compress
+  - sft: lora
+  - prm: xdprm
+  - grpo: grpo
+  - infer: engine
+  - eval: suite
+  - _self_
+
+seed: 0
+paths:
+  data: ${oc.env:AXIOM_DATA,data}
+  experiments: ${oc.env:AXIOM_EXP,experiments}
+
+wandb:
+  enabled: true
+  project: axiom
+  mode: online            # offline on boxes without network

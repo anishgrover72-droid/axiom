@@ -1,0 +1,8 @@
+# Larger Qwen for the cross-model comparison row in the eval matrix.
+name: qwen2_5_7b
+hf_id: Qwen/Qwen2.5-7B-Instruct
+family: qwen
+dtype: bfloat16
+load_in_4bit: true
+max_seq_len: 8192
+chat_template: null

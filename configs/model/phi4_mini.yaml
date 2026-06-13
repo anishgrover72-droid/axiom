@@ -1,0 +1,8 @@
+# Headline model (~3.8B). Run only after the 1.5B pipeline is green.
+name: phi4_mini
+hf_id: microsoft/Phi-4-mini-instruct
+family: phi
+dtype: bfloat16
+load_in_4bit: true
+max_seq_len: 4096
+chat_template: null

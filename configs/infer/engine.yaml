@@ -1,0 +1,20 @@
+# Unified inference engine = base policy + verifier-guided decoding + adaptive depth.
+# Toggle either strategy off for ablations (verifier_decode.enabled=false, etc.).
+verifier_decode:
+  enabled: true
+  branch_factor: 4            # B candidate next-steps sampled per step
+  keep_top_k: 2               # survivors after XD-PRM pruning
+  temperature: 0.8
+  max_steps: 12               # loop cap when adaptive depth is disabled
+  max_step_tokens: 96         # generation budget per single step
+
+adaptive_depth:
+  enabled: true
+  signal: [entropy, confidence, self_consistency]   # mixed uncertainty estimate
+  tau_low: 0.15               # below -> early exit (if answer stable)
+  tau_high: 0.55              # above -> expand reasoning
+  self_consistency_k: 5
+  max_depth: 12               # hard latency cap
+  token_budget: 1024
+
+score_with_prm: true          # attach per-head XD-PRM scores to every emitted step

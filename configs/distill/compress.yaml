@@ -1,0 +1,16 @@
+# Trace acquisition + Sparse CoT compression (Innovation 2).
+source:
+  # Primary path: load existing open distilled reasoning traces (no generation).
+  mode: open                  # open | teacher
+  open_id: open-r1/OpenR1-Math-220k
+  open_split: train
+  limit: null
+  fields: {question: problem, reasoning: generations, answer: answer}  # OpenR1: generations is a list
+  teacher: ${teacher}         # only used when mode=teacher (see teacher group)
+
+compress:
+  target_ratio: 0.6           # keep ~60% of tokens => the "~40% reduction" target
+  min_step_tokens: 4          # below this, merge into the neighbouring step
+  novelty_threshold: 0.92     # cosine sim above which a step is redundant -> pruned
+  embedder: sentence-transformers/all-MiniLM-L6-v2
+  preserve_answer: true       # drop a compression only if the gold answer stays derivable

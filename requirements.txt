@@ -1,0 +1,32 @@
+# GPU box (Linux + CUDA). IMPORTANT: install vLLM FIRST — it pins a compatible torch —
+# then install the rest, then `pip freeze > requirements.lock.txt` to capture exact versions.
+# Ranges below are chosen so GRPOTrainer exists (TRL >= 0.16) and the SFT/GRPO APIs we use
+# are present; do not downgrade TRL below 0.16 (no GRPOTrainer there).
+
+# --- core (also CPU-dev installable) ---
+pydantic>=2.9
+hydra-core>=1.3
+omegaconf>=2.3
+numpy>=1.26
+datasets>=3.0
+huggingface-hub>=0.25
+
+# --- GPU stack: install vllm first ---
+vllm>=0.7,<0.9            # pulls a compatible torch (do not pin torch separately)
+transformers>=4.49,<4.54
+trl>=0.16,<0.18           # GRPOTrainer/GRPOConfig live here
+peft>=0.14
+bitsandbytes>=0.45
+accelerate>=1.3
+sentence-transformers>=3.1
+faiss-cpu>=1.8
+
+# --- serving ---
+fastapi>=0.115
+uvicorn[standard]>=0.31
+sse-starlette>=2.1
+
+# --- tracking / tooling ---
+wandb>=0.18
+ruff>=0.6
+pytest>=8.3

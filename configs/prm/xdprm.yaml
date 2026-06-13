@@ -1,0 +1,42 @@
+# XD-PRM: cross-domain 5-head step-level verifier (the hub).
+backbone:
+  hf_id: Qwen/Qwen2.5-0.5B-Instruct   # same family as student => shared tokenizer
+  load_in_4bit: true
+  dtype: bfloat16                      # override to float32 for CPU runs
+  max_len: 4096
+  lora: {r: 16, alpha: 32, dropout: 0.05, target_modules: all-linear}
+  hidden_pool: last_sentinel           # read hidden state at each step's end sentinel
+  domain_embedding: true               # the "cross-domain" conditioning
+
+# Five heads. enabled/weight let ablations toggle a head via CLI override.
+heads:
+  logic:       {enabled: true, weight: 1.0, loss: mse}   # soft p(prefix -> correct)
+  commonsense: {enabled: true, weight: 1.0, loss: mse}   # plausibility + causal coherence
+  consistency: {enabled: true, weight: 1.0, loss: bce}   # 1 - P(contradiction)
+  efficiency:  {enabled: true, weight: 0.5, loss: mse}   # compactness
+  confidence:  {enabled: true, weight: 0.5, loss: mse}   # calibrated uncertainty
+
+# Label foundry settings (see src/axiom/prm/labeling/).
+labeling:
+  logic:       {rollouts_k: 8, max_new_tokens: 256, temperature: 0.8}
+  consistency: {nli_model: cross-encoder/nli-deberta-v3-base}
+  efficiency:  {embedder: sentence-transformers/all-MiniLM-L6-v2}
+  commonsense:                                          # only paid stream; capped
+    judge: ${teacher}
+    subset_size: 2000
+  confidence:  {source: rollout_variance}               # reuses logic rollouts
+
+train:
+  epochs: 3
+  lr: 1.0e-4
+  batch_size: 8
+  grad_accum: 4
+  max_grad_norm: 1.0
+
+# G2 gate thresholds (src/axiom/prm/validate.py). Downstream consumers blocked until met.
+gate:
+  min_auc: 0.70
+  min_bestofn_lift: 0.0          # best-of-N accuracy must beat random selection
+  max_head_correlation: 0.90     # heads above this are redundant -> prune/merge
+  max_ece: 0.15
+output_subdir: xdprm

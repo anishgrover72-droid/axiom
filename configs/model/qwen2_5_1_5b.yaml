@@ -1,0 +1,8 @@
+# Fast-iteration student. Everything is debugged here before the headline model.
+name: qwen2_5_1_5b
+hf_id: Qwen/Qwen2.5-1.5B-Instruct
+family: qwen
+dtype: bfloat16
+load_in_4bit: true          # QLoRA
+max_seq_len: 4096
+chat_template: null         # use the tokenizer's built-in template

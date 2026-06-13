@@ -1,0 +1,8 @@
+# Smallest student / cheap XD-PRM backbone. Used for smoke tests and fast labeling.
+name: qwen2_5_0_5b
+hf_id: Qwen/Qwen2.5-0.5B-Instruct
+family: qwen
+dtype: bfloat16
+load_in_4bit: true
+max_seq_len: 4096
+chat_template: null

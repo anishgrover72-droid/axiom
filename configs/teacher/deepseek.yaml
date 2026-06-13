@@ -1,0 +1,9 @@
+# OpenAI-compatible teacher endpoint used as the commonsense judge (and optional
+# trace generator). Credentials come from .env, never hardcoded.
+api_base: ${oc.env:JUDGE_API_BASE,https://api.deepseek.com}
+api_key_env: JUDGE_API_KEY
+model: ${oc.env:JUDGE_MODEL,deepseek-chat}
+max_tokens: 1024
+temperature: 0.0              # deterministic judging
+request_timeout_s: 60
+max_concurrency: 8

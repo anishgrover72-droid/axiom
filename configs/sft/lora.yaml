@@ -1,0 +1,13 @@
+# QLoRA SFT of the student on compressed traces.
+lora: {r: 16, alpha: 32, dropout: 0.05, target_modules: all-linear}
+train:
+  epochs: 2
+  lr: 2.0e-4
+  batch_size: 4
+  grad_accum: 8
+  warmup_ratio: 0.03
+  max_grad_norm: 1.0
+  gradient_checkpointing: true
+curriculum:
+  enabled: true   # length-ordered training (short/easy traces first) as a deterministic proxy
+output_subdir: sft

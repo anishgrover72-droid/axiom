@@ -1,0 +1,25 @@
+# data & experiment outputs (never committed)
+data/
+experiments/
+wandb/
+*.ckpt
+*.safetensors
+*.bin
+
+# secrets
+.env
+
+# python
+__pycache__/
+*.py[cod]
+.venv*/
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+
+# node / frontend
+node_modules/
+frontend/dist/
+
+# os
+.DS_Store

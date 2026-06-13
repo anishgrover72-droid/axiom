@@ -1,0 +1,10 @@
+# Full benchmark matrix. Each entry is a model variant evaluated across datasets.
+datasets: [gsm8k, commonsenseqa, openbookqa, arc_challenge]   # HotpotQA deferred (needs context/retrieval)
+limit: null                   # null = full split; set an int for quick runs
+variants:
+  - {name: base,             policy: base,  decode: greedy,   adaptive: false}
+  - {name: sft,              policy: sft,   decode: greedy,   adaptive: false}
+  - {name: sft_verifier,     policy: sft,   decode: verifier, adaptive: false}
+  - {name: sft_verifier_adp, policy: sft,   decode: verifier, adaptive: true}
+  - {name: axiom_full,       policy: grpo,  decode: verifier, adaptive: true}
+metrics: [accuracy, tokens_per_answer, latency_s, mean_step_reward, contradiction_rate]

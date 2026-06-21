@@ -1,0 +1,6 @@
+name: openbookqa
+hf_path: allenai/openbookqa
+hf_name: main
+domain: science
+answer_type: mcq
+max_examples: null

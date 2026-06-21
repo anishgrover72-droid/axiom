@@ -1,0 +1,6 @@
+name: hotpot_qa
+hf_path: hotpotqa/hotpot_qa
+hf_name: fullwiki
+domain: multihop
+answer_type: span
+max_examples: null

@@ -9,6 +9,7 @@ import pytest
 
 torch = pytest.importorskip("torch")
 pytest.importorskip("transformers")
+pytest.importorskip("hydra")
 
 from axiom.common.config import load_config  # noqa: E402
 from axiom.common.io import write_records  # noqa: E402

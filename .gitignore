@@ -1,6 +1,7 @@
-# data & experiment outputs (never committed)
-data/
-experiments/
+# data & experiment outputs (never committed) — anchored to root so
+# src/axiom/data/ and configs/data/ are NOT excluded
+/data/
+/experiments/
 wandb/
 *.ckpt
 *.safetensors

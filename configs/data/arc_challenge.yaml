@@ -1,0 +1,6 @@
+name: arc_challenge
+hf_path: allenai/ai2_arc
+hf_name: ARC-Challenge
+domain: science
+answer_type: mcq
+max_examples: null

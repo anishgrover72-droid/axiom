@@ -1,0 +1,6 @@
+name: commonsense_qa
+hf_path: tau/commonsense_qa
+hf_name: null
+domain: commonsense
+answer_type: mcq
+max_examples: null

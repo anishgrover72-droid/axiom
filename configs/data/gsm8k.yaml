@@ -1,0 +1,6 @@
+name: gsm8k
+hf_path: openai/gsm8k
+hf_name: main
+domain: math
+answer_type: numeric
+max_examples: null    # null = use full split; override for quick smoke runs

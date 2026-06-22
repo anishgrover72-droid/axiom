@@ -16,8 +16,6 @@ from sse_starlette.sse import EventSourceResponse
 from starlette.concurrency import run_in_threadpool
 
 from axiom.common.config import load_config
-from axiom.inference.engine import ReasoningEngine
-from axiom.serve.stream import reason_events
 
 app = FastAPI(title="AXIOM")
 app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
@@ -35,6 +33,8 @@ def _get_engine() -> ReasoningEngine:
     """Build the engine once, from env-selected variant (default SFT policy)."""
     global _engine
     if _engine is None:
+        from axiom.inference.engine import ReasoningEngine  # lazy: keeps torch off the demo path
+
         cfg = load_config(os.environ.get("AXIOM_OVERRIDES", "").split() or None)
         _engine = ReasoningEngine(cfg, variant=os.environ.get("AXIOM_VARIANT", "sft"))
     return _engine
@@ -47,8 +47,16 @@ def health() -> dict:
 
 @app.post("/reason")
 async def reason(req: ReasonRequest) -> EventSourceResponse:
-    engine = _get_engine()
-    events = reason_events(engine, req.question, req.domain, req.answer_type)
+    if os.environ.get("AXIOM_DEMO"):
+        # Model-free path: stream a canned trace (no torch/GPU) for E2E integration.
+        from axiom.serve.demo import demo_events
+
+        events = demo_events(req.question, req.domain, req.answer_type)
+    else:
+        from axiom.serve.stream import reason_events
+
+        engine = _get_engine()
+        events = reason_events(engine, req.question, req.domain, req.answer_type)
 
     async def emit():
         # Pull each blocking step off the thread pool so steps stream as they are produced.

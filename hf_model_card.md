@@ -30,7 +30,7 @@ Small Language Models (SLMs) using Reinforcement Learning.
 
 | Resource | Link |
 |---|---|
-| GitHub (AXIOM code) | https://github.com/prabindersinghh/axiom-ax-2026 |
+| GitHub (AXIOM code) | https://github.com/anishgrover72-droid/axiom |
 | Model (this) | https://huggingface.co/prabindersinghh/axiom-qwen2.5-1.5b-reasoning |
 | Training Dataset | https://huggingface.co/datasets/prabindersinghh/axiom-reasoning-traces |
 | Demo Video | https://youtu.be/xdE6rI9mULU?si=v4dzUQCTxAbbht6g |
@@ -137,7 +137,7 @@ print(tokenizer.decode(outputs[0][inputs["input_ids"].shape[1]:], skip_special_t
 ### With AXIOM verifier-guided decoding (full pipeline)
 
 ```bash
-git clone https://github.com/prabindersinghh/axiom-ax-2026.git axiom && cd axiom
+git clone https://github.com/anishgrover72-droid/axiom.git axiom && cd axiom
 pip install -e .
 make serve      # FastAPI on :8000 with XD-PRM scoring
 # then open the React console at :5173 for live per-step telemetry
@@ -214,7 +214,7 @@ Thapar Institute of Engineering & Technology, Patiala
   author    = {Prabinder Singh and Anish Grover},
   year      = {2026},
   note      = {Samsung ennovateX AX Hackathon 2026, Problem Statement 06},
-  url       = {https://github.com/prabindersinghh/axiom-ax-2026}
+  url       = {https://github.com/anishgrover72-droid/axiom}
 }
 ```
 
@@ -231,7 +231,7 @@ All supporting code is Apache 2.0. The training dataset is CC-BY-4.0.
 
 | Resource | URL |
 |---|---|
-| AXIOM GitHub | https://github.com/prabindersinghh/axiom-ax-2026 |
+| AXIOM GitHub | https://github.com/anishgrover72-droid/axiom |
 | Training Dataset | https://huggingface.co/datasets/prabindersinghh/axiom-reasoning-traces |
 | Base Model | https://huggingface.co/Qwen/Qwen2.5-1.5B-Instruct |
 | XD-PRM Backbone | https://huggingface.co/Qwen/Qwen2.5-0.5B-Instruct |

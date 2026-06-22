@@ -32,7 +32,7 @@ GRPO-tuned Small Language Models.
 
 | Resource | Link |
 |---|---|
-| GitHub (AXIOM) | https://github.com/prabindersinghh/axiom-ax-2026 |
+| GitHub (AXIOM) | https://github.com/anishgrover72-droid/axiom |
 | Trained Model | https://huggingface.co/prabindersinghh/axiom-qwen2.5-1.5b-reasoning |
 | Dataset (this) | https://huggingface.co/datasets/prabindersinghh/axiom-reasoning-traces |
 | Demo Video | https://youtu.be/xdE6rI9mULU?si=v4dzUQCTxAbbht6g |
@@ -360,7 +360,7 @@ for record in labels:
 ### Reproduce the full dataset from source
 
 ```bash
-git clone https://github.com/prabindersinghh/axiom-ax-2026.git axiom && cd axiom
+git clone https://github.com/anishgrover72-droid/axiom.git axiom && cd axiom
 pip install -e .
 python scripts/00_download_data.py data=gsm8k
 python scripts/01_build_traces.py  data=gsm8k distill.source.limit=300 distill.source.max_reasoning_chars=6000
@@ -369,7 +369,7 @@ python scripts/03_sft.py           model=qwen2_5_1_5b sft.train.max_seq_tokens=2
 python scripts/04_prm_label.py     model=qwen2_5_1_5b
 ```
 
-See [notebooks/kaggle_run.ipynb](https://github.com/prabindersinghh/axiom-ax-2026/blob/main/notebooks/kaggle_run.ipynb) for a runnable end-to-end notebook (Kaggle T4).
+See [notebooks/kaggle_run.ipynb](https://github.com/anishgrover72-droid/axiom/blob/main/notebooks/kaggle_run.ipynb) for a runnable end-to-end notebook (Kaggle T4).
 
 ---
 
@@ -406,7 +406,7 @@ If you use this dataset, please cite the AXIOM submission:
   author    = {Prabinder Singh and Anish Grover},
   year      = {2026},
   note      = {Samsung ennovateX AX Hackathon 2026, Problem Statement 06},
-  url       = {https://github.com/prabindersinghh/axiom-ax-2026}
+  url       = {https://github.com/anishgrover72-droid/axiom}
 }
 ```
 
@@ -416,7 +416,7 @@ If you use this dataset, please cite the AXIOM submission:
 
 | Resource | URL |
 |---|---|
-| AXIOM GitHub (code + configs) | https://github.com/prabindersinghh/axiom-ax-2026 |
+| AXIOM GitHub (code + configs) | https://github.com/anishgrover72-droid/axiom |
 | AXIOM Trained Model (HF) | https://huggingface.co/prabindersinghh/axiom-qwen2.5-1.5b-reasoning |
 | AXIOM Dataset (this) | https://huggingface.co/datasets/prabindersinghh/axiom-reasoning-traces |
 | Demo Video | https://youtu.be/xdE6rI9mULU?si=v4dzUQCTxAbbht6g |

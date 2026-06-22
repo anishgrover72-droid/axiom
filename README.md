@@ -257,7 +257,7 @@ axiom/
 
 ### CPU (tests only, no GPU required)
 ```bash
-git clone https://github.com/prabindersinghh/axiom-ax-2026.git axiom && cd axiom
+git clone https://github.com/anishgrover72-droid/axiom.git axiom && cd axiom
 python -m venv .venv && source .venv/bin/activate   # Windows: .venv\Scripts\activate
 pip install -e .
 pytest -m "not slow" -q        # 30 tests, all pass

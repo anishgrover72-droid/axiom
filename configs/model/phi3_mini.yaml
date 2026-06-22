@@ -1,0 +1,8 @@
+# Phi-3-mini (3.8B) — PS-06 suggested SLM. Strong GSM8K baseline → good KPI base.
+name: phi3_mini
+hf_id: microsoft/Phi-3-mini-4k-instruct
+family: phi
+dtype: bfloat16
+load_in_4bit: true
+max_seq_len: 4096
+chat_template: null

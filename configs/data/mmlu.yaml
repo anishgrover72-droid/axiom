@@ -1,0 +1,6 @@
+name: mmlu
+hf_path: cais/mmlu
+hf_name: all
+domain: knowledge
+answer_type: mcq
+max_examples: null

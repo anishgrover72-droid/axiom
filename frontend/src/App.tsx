@@ -1,68 +1,44 @@
-import { useState } from "react";
-import { DoneEvent, StepEvent, streamReason } from "./api";
-import { DepthTrace } from "./components/DepthTrace";
-import { HeadScores } from "./components/HeadScores";
-import { ReasoningGraph } from "./components/ReasoningGraph";
-
-const DEMO_QUESTION = "Can a vegetarian survive on Mars using current technology?";
+import { MouseEvent, useRef, useState } from "react";
+import { Nav } from "./components/Nav";
+import { SpaceField } from "./components/SpaceField";
+import { Page } from "./content";
+import { Console } from "./pages/Console";
+import { Home } from "./pages/Home";
+import { Pipeline } from "./pages/Pipeline";
+import { Tech } from "./pages/Tech";
 
 export default function App() {
-  const [question, setQuestion] = useState(DEMO_QUESTION);
-  const [domain, setDomain] = useState("commonsense");
-  const [steps, setSteps] = useState<StepEvent[]>([]);
-  const [done, setDone] = useState<DoneEvent | null>(null);
-  const [selected, setSelected] = useState<number | null>(null);
-  const [running, setRunning] = useState(false);
+  const [page, setPage] = useState<Page>("home");
+  const rootRef = useRef<HTMLDivElement>(null);
+  const frame = useRef<number>(0);
 
-  async function run() {
-    setSteps([]);
-    setDone(null);
-    setSelected(null);
-    setRunning(true);
-    try {
-      await streamReason(
-        { question, domain, answer_type: "span" },
-        (step) => setSteps((prev) => [...prev, step]),
-        (final) => setDone(final),
-      );
-    } finally {
-      setRunning(false);
-    }
+  function onMove(e: MouseEvent) {
+    const px = (e.clientX / window.innerWidth) * 2 - 1;
+    const py = (e.clientY / window.innerHeight) * 2 - 1;
+    cancelAnimationFrame(frame.current);
+    frame.current = requestAnimationFrame(() => {
+      const el = rootRef.current;
+      if (!el) return;
+      el.style.setProperty("--px", px.toFixed(3));
+      el.style.setProperty("--py", py.toFixed(3));
+    });
+  }
+
+  function navigate(p: Page) {
+    setPage(p);
+    window.scrollTo({ top: 0, behavior: "auto" });
   }
 
   return (
-    <div className="app">
-      <header>
-        <h1>AXIOM</h1>
-        <span className="tag">Explainable Micro-Reasoning · verifier-guided</span>
-      </header>
-
-      <div className="controls">
-        <input value={question} onChange={(e) => setQuestion(e.target.value)} />
-        <select value={domain} onChange={(e) => setDomain(e.target.value)}>
-          {["commonsense", "math", "science", "multihop"].map((d) => (
-            <option key={d} value={d}>
-              {d}
-            </option>
-          ))}
-        </select>
-        <button onClick={run} disabled={running}>
-          {running ? "Reasoning…" : "Reason"}
-        </button>
-      </div>
-
-      <DepthTrace steps={steps} />
-
-      <div className="layout">
-        <ReasoningGraph steps={steps} selected={selected} onSelect={setSelected} />
-        <HeadScores step={selected === null ? null : steps[selected]} />
-      </div>
-
-      {done && (
-        <footer>
-          <b>Answer:</b> {done.answer ?? "—"} · {done.n_steps} steps · {done.n_tokens} tokens
-        </footer>
-      )}
+    <div className="app-root" ref={rootRef} onMouseMove={onMove}>
+      <SpaceField />
+      <Nav page={page} onNavigate={navigate} />
+      <main className="page" key={page}>
+        {page === "home" && <Home onNavigate={navigate} />}
+        {page === "pipeline" && <Pipeline />}
+        {page === "tech" && <Tech />}
+        {page === "console" && <Console />}
+      </main>
     </div>
   );
 }

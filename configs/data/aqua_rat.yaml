@@ -1,0 +1,6 @@
+name: aqua_rat
+hf_path: deepmind/aqua_rat
+hf_name: raw
+domain: math
+answer_type: mcq
+max_examples: null

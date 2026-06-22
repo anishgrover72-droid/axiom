@@ -23,14 +23,20 @@ _EVAL_SPLIT: dict[str, str] = {
     "arc_challenge": "test",
     "hotpot_qa": "validation",
     "openbookqa": "test",
+    "mmlu": "test",
+    "strategyqa": "test",
+    "aqua_rat": "test",
 }
+
+# Datasets whose logical "train" maps to a non-"train" HF split (e.g. MMLU has no train).
+_TRAIN_SPLIT: dict[str, str] = {"mmlu": "validation"}
 
 
 def _hf_split(dataset_name: str, split: str) -> str:
-    """Translate logical "eval" to the dataset-specific HF split name."""
+    """Translate logical "eval"/"train" to the dataset-specific HF split name."""
     if split == "eval":
         return _EVAL_SPLIT.get(dataset_name, "test")
-    return split
+    return _TRAIN_SPLIT.get(dataset_name, split)
 
 
 def _gsm8k_examples(rows, domain: str) -> Iterator[Example]:
@@ -81,7 +87,16 @@ _LOADERS: dict[str, tuple] = {
     "arc_challenge": ("allenai/ai2_arc", "ARC-Challenge", None),
     "hotpot_qa": ("hotpotqa/hotpot_qa", "fullwiki", None),
     "openbookqa": ("allenai/openbookqa", "main", None),
+    "mmlu": ("cais/mmlu", "all", None),
+    "strategyqa": ("ChilleD/StrategyQA", None, None),
+    "aqua_rat": ("deepmind/aqua_rat", "raw", None),
 }
+
+
+def _list_choices(raw: list) -> dict[str, list[str]]:
+    """List-style choices (MMLU / AQuA-RAT) -> HF {label, text} dict with letter labels."""
+    letters = [chr(ord("A") + j) for j in range(len(raw))]
+    return {"label": letters, "text": [str(c) for c in raw]}
 
 
 def load_examples(
@@ -156,6 +171,37 @@ def _row_to_example(
                 question=row["question"],
                 gold_answer=row["answer"],
                 answer_type="span",
+            )
+        if name == "mmlu":
+            choices = _list_choices(row["choices"])  # list[str]; answer is int 0-3
+            return Example(
+                id=f"mmlu:{idx}",
+                dataset="mmlu",
+                domain=domain,
+                question=row["question"],
+                gold_answer=choices["label"][int(row["answer"])],
+                answer_type="mcq",
+                choices=choices,
+            )
+        if name == "aqua_rat":
+            choices = _list_choices(row["options"])  # ["A)..", "B).."]; correct is a letter
+            return Example(
+                id=f"aqua_rat:{idx}",
+                dataset="aqua_rat",
+                domain=domain,
+                question=row["question"],
+                gold_answer=str(row["correct"]).strip().upper(),
+                answer_type="mcq",
+                choices=choices,
+            )
+        if name == "strategyqa":
+            return Example(
+                id=f"strategyqa:{idx}",
+                dataset="strategyqa",
+                domain=domain,
+                question=row["question"],
+                gold_answer="yes" if row["answer"] else "no",  # bool -> yes/no
+                answer_type="boolean",
             )
     except (KeyError, TypeError) as exc:
         log.debug("skipping row %d (%s): %s", idx, name, exc)

@@ -43,3 +43,11 @@ def test_span_exact_and_f1():
     v = grade("The Eiffel Tower", "Eiffel Tower", "span")
     assert v.f1 == 1.0  # articles/case/punct normalized away
     assert grade("Eiffel Tower is in Paris", "Eiffel Tower", "span").f1 < 1.0
+
+
+def test_boolean_strategyqa():
+    # StrategyQA gold is a bool stringified to True/False; yes/no/true/false all grade.
+    assert grade("So the answer is yes.", "True", "boolean").correct
+    assert grade("the answer is no", "False", "boolean").correct
+    assert not grade("yes, definitely", "False", "boolean").correct
+    assert grade("Therefore the answer is False.", "False", "boolean").correct

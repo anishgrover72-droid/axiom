@@ -24,14 +24,6 @@ export interface ReasonRequest {
   answer_type: string;
 }
 
-export const HEAD_COLORS: Record<string, string> = {
-  logic: "#3b82f6",
-  commonsense: "#a855f7",
-  consistency: "#06b6d4",
-  efficiency: "#22c55e",
-  confidence: "#ef4444",
-};
-
 export async function streamReason(
   body: ReasonRequest,
   onStep: (step: StepEvent) => void,
@@ -42,6 +34,10 @@ export async function streamReason(
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(body),
   });
+  const contentType = res.headers.get("content-type") ?? "";
+  if (!res.ok || !contentType.includes("text/event-stream")) {
+    throw new Error(`reason endpoint unavailable (${res.status})`);
+  }
   if (!res.body) throw new Error("no response stream");
 
   const reader = res.body.getReader();

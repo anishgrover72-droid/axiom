@@ -1,0 +1,6 @@
+name: strategyqa
+hf_path: ChilleD/StrategyQA
+hf_name: null
+domain: commonsense
+answer_type: boolean
+max_examples: null

@@ -1,5 +1,6 @@
 # Full benchmark matrix. Each entry is a model variant evaluated across datasets.
-datasets: [gsm8k, commonsenseqa, openbookqa, arc_challenge]   # HotpotQA deferred (needs context/retrieval)
+# PS-06 KPI benchmarks first; others (aqua_rat, arc_challenge, commonsenseqa, openbookqa) available.
+datasets: [gsm8k, mmlu, strategyqa]
 limit: null                   # null = full split; set an int for quick runs
 variants:
   - {name: base,             policy: base,  decode: greedy,   adaptive: false}

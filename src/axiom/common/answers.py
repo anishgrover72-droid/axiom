@@ -18,6 +18,7 @@ _BOXED = re.compile(r"\\boxed\{([^}]*)\}")
 _ANSWER_IS = re.compile(r"answer\s*(?:is|:|=)\s*", re.IGNORECASE)
 _MCQ_LETTER = re.compile(r"\b([A-E])\b")
 _ARTICLES = re.compile(r"\b(a|an|the)\b")
+_YESNO = re.compile(r"\b(yes|no|true|false)\b", re.IGNORECASE)
 
 
 @dataclass(slots=True)
@@ -114,6 +115,24 @@ def _f1_span(pred: str, gold: str) -> float:
     return 2 * precision * recall / (precision + recall)
 
 
+# --- boolean (StrategyQA) --------------------------------------------------
+
+
+def _norm_bool(s: str) -> str:
+    v = s.strip().lower()
+    if v in ("yes", "true", "1"):
+        return "yes"
+    if v in ("no", "false", "0"):
+        return "no"
+    return v
+
+
+def _pred_boolean(text: str) -> str | None:
+    tail = text[m.end() :] if (m := _ANSWER_IS.search(text)) else ""
+    hits = _YESNO.findall(tail) or _YESNO.findall(text)
+    return _norm_bool(hits[-1]) if hits else None
+
+
 def has_answer(text: str) -> bool:
     """True if the text states a final answer (used for adaptive early-exit)."""
     return bool(_ANSWER_IS.search(text) or _BOXED.search(text))
@@ -127,6 +146,8 @@ def extract_prediction(text: str, answer_type: str, choices: dict | None = None)
         return _pred_mcq(text, choices)
     if answer_type == "span":
         return text.strip() or None
+    if answer_type == "boolean":
+        return _pred_boolean(text)
     raise ConfigError(f"unknown answer_type '{answer_type}'")
 
 
@@ -142,4 +163,7 @@ def grade(output: str, gold_raw: str, answer_type: str, choices: dict | None = N
     if answer_type == "span":
         f1 = _f1_span(output, gold_raw)
         return Verdict(_squad_norm(output) == _squad_norm(gold_raw), output.strip(), gold_raw, f1)
+    if answer_type == "boolean":
+        gold, pred = _norm_bool(gold_raw), _pred_boolean(output)
+        return Verdict(pred == gold, pred, gold)
     raise ConfigError(f"unknown answer_type '{answer_type}'")

@@ -355,10 +355,16 @@ the **composite-reward GRPO** loop, and the **verifier-guided adaptive-depth** d
 
 ## Team Acknowledgements
 
-**Prabinder Singh** — Thapar Institute of Engineering & Technology, Patiala
-**Anish Grover** — Thapar Institute of Engineering & Technology, Patiala
+| | Member 1 | Member 2 |
+|---|---|---|
+| **Name** | Prabinder Singh | Anish Grover |
+| **College** | Thapar Institute of Engineering & Technology, Patiala | Thapar Institute of Engineering & Technology, Patiala |
+| **Roll No.** | 1024180012 | 1024060170 |
+| **Email** | psingh16_be24@thapar.edu | agrover_be24@thapar.edu |
+| **Degree & Dept.** | B.Tech CSBS | B.Tech ECE |
+| **Year** | 2nd Year | 2nd Year |
 
-Built for Samsung ennovateX AX Hackathon 2026, Problem Statement 06.
+Built for **Samsung ennovateX AX Hackathon 2026**, Problem Statement 06.
 Demo: https://youtu.be/xdE6rI9mULU?si=v4dzUQCTxAbbht6g
 
 ---

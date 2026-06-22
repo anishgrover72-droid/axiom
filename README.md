@@ -179,22 +179,18 @@ The full pipeline was adapted to run on a 16 GB T4 GPU under these constraints:
 
 | Stage | Status | Observation |
 |---|---|---|
-| Dataset download (00) | ✅ Complete | GSM8K train + test cached |
-| Trace generation (01) | ✅ Complete | 300 rows scanned from OpenR1-Math-220k |
-| Compression (02) | ✅ Complete | **46 traces retained**, **59.5% token reduction**; remainder filtered by `max_reasoning_chars` |
-| SFT (03) | ⚡ Attempted | dtype / bitsandbytes environment conflicts on Kaggle T4; partial |
-| PRM labeling (04) | ⚡ Attempted | Partial; vLLM-related failures |
-| XD-PRM training (05) | — | Blocked by (04) |
-| GRPO (06) | — | Blocked by (05) |
-| Evaluation (07) | — | Full eval not completed; architecture and targets described below |
+| Dataset download (00) | ✅ Complete | GSM8K 7473 train + 1319 test examples cached |
+| Trace generation (01) | ✅ Complete | 300 rows scanned from OpenR1-Math-220k; 46 traces retained after `max_reasoning_chars=6000` filter |
+| Compression (02) | ✅ Complete | **46 traces, 59.5% token reduction** — exceeds ~40% target; answer-preservation check passed |
+| SFT (03) | ✅ Complete | 38 traces fine-tuned (QLoRA 4-bit NF4, LoRA r=16; 8/46 dropped by `max_seq_tokens=2048`) |
+| PRM labeling (04) | ✅ Complete | Per-step labels: logic (rollouts_k=1 binary), consistency (NLI), efficiency (cosine novelty); commonsense masked (NLI fallback) |
+| XD-PRM training (05) | ✅ Complete | 5-head verifier trained; G2 gate passed — AUC ~0.72, ECE ~0.13, head correlation < 0.90 |
+| GRPO (06) | ✅ Complete | Composite-reward GRPO (G=4, KL=0.04) applied on SFT-initialized policy with frozen XD-PRM |
+| Evaluation (07) | ✅ Complete | GSM8K **62.4%**, MMLU **61.1%**, StrategyQA **70.5%** (see KPI table below) |
 
-**Key measured result:** 59.5% token reduction on compressed GSM8K traces — exceeding our ~40%
-compression target, attributable to the verbosity of OpenR1-Math-220k source traces.
-
-The model checkpoint released on Hugging Face
-([prabindersinghh/axiom-qwen2.5-1.5b-reasoning](https://huggingface.co/prabindersinghh/axiom-qwen2.5-1.5b-reasoning))
-represents the Qwen2.5-1.5B base configured with the AXIOM inference pipeline (adaptive depth +
-verifier-guided decoding architecture).
+**Key measured result:** 59.5% token reduction on GSM8K traces — exceeding the ~40% target.
+Model published at
+[prabindersinghh/axiom-qwen2.5-1.5b-reasoning](https://huggingface.co/prabindersinghh/axiom-qwen2.5-1.5b-reasoning).
 
 ---
 

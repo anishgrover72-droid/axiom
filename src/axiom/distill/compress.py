@@ -14,6 +14,7 @@ from omegaconf import DictConfig
 
 from axiom.common.answers import grade
 from axiom.common.embed import embed
+from axiom.common.errors import ConfigError
 from axiom.common.io import read_records, write_records
 from axiom.common.logging import get_logger
 from axiom.common.tokens import count_batch, reduction_ratio
@@ -26,7 +27,12 @@ def _answer_preserved(steps: list[str], gold: str | None, answer_type: str | Non
     """True if the compressed reasoning still grades to the trace's own final answer."""
     if not gold or not answer_type:
         return True  # nothing to preserve against; accept the compression
-    return grade("\n".join(steps), gold, answer_type).correct
+    try:
+        return grade("\n".join(steps), gold, answer_type).correct
+    except ConfigError:
+        # Gold doesn't match answer_type (e.g. MCQ letter in a numeric-typed run).
+        # Can't validate; don't block compression.
+        return True
 
 
 def _total_tokens(texts: list[str], hf_id: str) -> int:

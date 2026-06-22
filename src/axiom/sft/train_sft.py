@@ -47,7 +47,13 @@ def train_sft(cfg: DictConfig) -> Path:
     )
     if sft.curriculum.enabled:
         traces.sort(key=lambda t: len(t.steps))
-    dataset = Dataset.from_dict({"text": [_format(t, tokenizer) for t in traces]})
+    texts = [_format(t, tokenizer) for t in traces]
+    cap: int | None = sft.train.max_seq_tokens
+    if cap is not None:
+        n_before = len(texts)
+        texts = [t for t in texts if len(tokenizer.encode(t)) <= cap]
+        log.info("dropped %d/%d traces over max_seq_tokens=%d", n_before - len(texts), n_before, cap)
+    dataset = Dataset.from_dict({"text": texts})
     log.info("SFT on %d traces", len(dataset))
 
     out_dir = sft_dir(cfg)

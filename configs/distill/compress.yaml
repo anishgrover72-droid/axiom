@@ -6,6 +6,7 @@ source:
   open_split: train
   limit: null
   fields: {question: problem, reasoning: generations, answer: answer}  # OpenR1: generations is a list
+  max_reasoning_chars: null  # if set, skip source rows whose raw reasoning exceeds this char count
   teacher: ${teacher}         # only used when mode=teacher (see teacher group)
 
 compress:

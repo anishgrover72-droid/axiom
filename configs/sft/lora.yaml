@@ -8,6 +8,7 @@ train:
   warmup_ratio: 0.03
   max_grad_norm: 1.0
   gradient_checkpointing: true
+  max_seq_tokens: null   # if set, traces tokenizing longer than this are dropped (not truncated)
 curriculum:
   enabled: true   # length-ordered training (short/easy traces first) as a deterministic proxy
 output_subdir: sft

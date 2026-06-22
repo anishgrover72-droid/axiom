@@ -26,10 +26,14 @@ def load_open_traces(src: DictConfig, *, dataset: str, domain: str) -> Iterator[
 
     ds = load_dataset(src.open_id, split=src.open_split)
     f = src.fields
+    max_chars: int | None = src.max_reasoning_chars
     for i, row in enumerate(ds):
         if src.limit is not None and i >= src.limit:
             break
-        steps = [Step(idx=j, text=t) for j, t in enumerate(segment(_first(row[f.reasoning])))]
+        raw = _first(row[f.reasoning])
+        if max_chars is not None and len(raw) > max_chars:
+            continue
+        steps = [Step(idx=j, text=t) for j, t in enumerate(segment(raw))]
         if not steps:
             continue
         yield Trace(
